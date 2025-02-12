@@ -26,8 +26,6 @@ RUN pip install uv && uv --version && \
     uv pip install --no-build-isolation --overrides=numpy-override.txt "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@3aa7f14ff44af1746e96e149f23657215a7cf1df" && \
     rm -rf /var/lib/apt/lists/*
 
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite
-
 WORKDIR /workspace
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
