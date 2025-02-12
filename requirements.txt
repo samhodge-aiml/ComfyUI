@@ -72,3 +72,5 @@ openai
 anthropic
 humanize
 lightning
+jax
+flax
