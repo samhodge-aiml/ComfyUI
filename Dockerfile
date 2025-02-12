@@ -25,11 +25,10 @@ RUN pip install uv && uv --version && \
     uv pip install --no-build-isolation opencv-python-headless && \
     uv pip install --no-build-isolation --overrides=numpy-override.txt "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@67fa5dd42024226f0dff1719563efe6ac7362a12" && \
     rm -rf /var/lib/apt/lists/*
-RUN cd /workspace/custom_nodes && git checkout https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite && cd ComfyUI-VideoHelperSuite && uv pip install -r requirements.txt
 WORKDIR /workspace
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
 RUN comfyui --quick-test-for-ci --cpu --cwd /workspace
-
+RUN cd /workspace/custom_nodes && git checkout https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite && cd ComfyUI-VideoHelperSuite && uv pip install -r requirements.txt
 EXPOSE 8188
 CMD ["python", "-m", "comfy.cmd.main", "--listen"]
