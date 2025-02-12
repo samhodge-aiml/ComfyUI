@@ -5,7 +5,8 @@ torchsde>=0.2.6
 numpy>=1.25.0
 einops>=0.6.0
 open-clip-torch>=2.24.0
-transformers>=4.29.1
+sageattention
+transformers==4.47.0
 tokenizers>=0.13.3
 sentencepiece
 peft>=0.10.0
@@ -71,5 +72,3 @@ openai
 anthropic
 humanize
 lightning
-flax
-jax
