@@ -23,7 +23,7 @@ RUN pip install uv && uv --version && \
     rm -rf /usr/local/lib/python3.10/dist-packages/cv2/ && \
     uv pip install wheel && \
     uv pip install --no-build-isolation opencv-python-headless && \
-    uv pip install --no-build-isolation --overrides=numpy-override.txt "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@sageattention-transformers-patch" && \
+    uv pip install --no-build-isolation --overrides=numpy-override.txt "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@b244d60452e4424524ec5b322d4592ccaa17db0e" && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
