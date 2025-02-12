@@ -23,8 +23,10 @@ RUN pip install uv && uv --version && \
     rm -rf /usr/local/lib/python3.10/dist-packages/cv2/ && \
     uv pip install wheel && \
     uv pip install --no-build-isolation opencv-python-headless && \
-    uv pip install --no-build-isolation --overrides=numpy-override.txt "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@b244d60452e4424524ec5b322d4592ccaa17db0e" && \
+    uv pip install --no-build-isolation --overrides=numpy-override.txt "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@sageattention-transformers-patch" && \
     rm -rf /var/lib/apt/lists/*
+
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite
 
 WORKDIR /workspace
 # addresses https://github.com/pytorch/pytorch/issues/104801
