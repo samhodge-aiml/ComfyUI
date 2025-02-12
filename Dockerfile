@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # mitigates
 # RuntimeError: Failed to import transformers.generation.utils because of the following error (look up to see its traceback):
 # numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
-# RUN echo "numpy<2" > numpy-override.txt
+RUN echo "numpy==2.2.2" > numpy-override.txt
 
 # mitigates https://stackoverflow.com/questions/55313610/importerror-libgl-so-1-cannot-open-shared-object-file-no-such-file-or-directo
 # mitigates AttributeError: module 'cv2.dnn' has no attribute 'DictValue' \
