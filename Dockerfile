@@ -29,6 +29,6 @@ WORKDIR /workspace
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
 RUN comfyui --quick-test-for-ci --cpu --cwd /workspace
-RUN cd /workspace/custom_nodes && git checkout https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite && cd ComfyUI-VideoHelperSuite && uv pip install -r requirements.txt
+RUN cd /workspace/custom_nodes && git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite && cd ComfyUI-VideoHelperSuite && uv pip install -r requirements.txt
 EXPOSE 8188
 CMD ["python", "-m", "comfy.cmd.main", "--listen"]
