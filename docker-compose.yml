@@ -19,6 +19,8 @@ services:
       - COMFYUI_LOGGING_LEVEL=ERROR
     command:
       - comfyui-worker
+      - --base_paths
+      - /workspace
     healthcheck:
       test: curl -f http://localhost:9090/health
       interval: 10s
@@ -43,6 +45,8 @@ services:
     command:
       - comfyui
       - --listen
+      - --base_paths
+      - /workspace
     healthcheck:
       test: curl -f http://localhost:8188/object_info
       interval: 10s
