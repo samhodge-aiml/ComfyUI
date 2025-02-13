@@ -22,7 +22,7 @@ RUN uv pip install --no-build-isolation opencv-python-headless --break-system-pa
 RUN uv pip install --no-build-isolation "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@cde73655d220827b6c934ba145037e4f499670df" --break-system-packages
 RUN rm -rf /var/lib/apt/lists/*
 RUN uv pip install  git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite --break-system-packages
-#RUN uv pip install comfyui-hunyuanvideowrapper@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanVideoWrapper@hyvideo009 --break-system-packages 
+RUN uv pip install comfyui-hunyuanvideowrapper@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanVideoWrapper@cd50b21d607485bb19aa302f1c9ed0c38160c56d --break-system-packages 
 
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
