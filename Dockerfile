@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/pytorch:25.01-py3
+FROM nvcr.io/nvidia/pytorch:24.12-py3
 
 ARG TZ="America/Los_Angeles"
 
@@ -13,18 +13,18 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # mitigates AttributeError: module 'cv2.dnn' has no attribute 'DictValue' \
 # see https://github.com/facebookresearch/nougat/issues/40
 WORKDIR /workspace
-RUN pip install  uv --root-user-action=ignore && uv --version && uv venv --seed --python 3.12 --directory /workspace && source /workspace/.venv/bin/activate && \
+RUN pip install  uv --root-user-action=ignore && uv --version && \
     apt-get update && apt-get install --no-install-recommends ffmpeg libsm6 libxext6 -y && \
-    rm -rf /usr/local/lib/python3.10/dist-packages/cv2/
-RUN source /workspace/.venv/bin/activate && /workspace/.venv/bin/pip3 install --upgrade  pip setuptools wheel 
-RUN source /workspace/.venv/bin/activate && /workspace/.venv/bin/pip3 install aiohttp
-RUN source /workspace/.venv/bin/activate && /workspace/.venv/bin/pip3 install --no-build-isolation opencv-python-headless
-RUN source /workspace/.venv/bin/activate && /workspace/.venv/bin/pip3 install --no-build-isolation "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@sageattention-transformers-patch"
+    rm -rf /usr/local/lib/python3.*/dist-packages/cv2/
+RUN uv pip install --upgrade  pip setuptools wheel --break-system-packages
+RUN uv pip install aiohttp --break-system-packages
+RUN uv pip install --no-build-isolation opencv-python-headless --break-system-packages
+RUN uv pip install --no-build-isolation "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@sageattention-transformers-patch" --break-system-packages
 RUN rm -rf /var/lib/apt/lists/*
-RUN source .venv/bin/activate && /workspace/.venv/bin/pip3 install  git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite
+RUN uv pip install  git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite --break-system-packages
 
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
-RUN comfyui --quick-test-for-ci --cpu --cwd /workspace
+RUN comfyui --quick-test-for-ci --cpu --cwd /workspace 
 EXPOSE 8188
-CMD ["source", ".venv/bin/activate", "&&", "python", "-m", "comfy.cmd.main", "--listen"]
+CMD ["python3", "-m", "comfy.cmd.main", "--listen"]
