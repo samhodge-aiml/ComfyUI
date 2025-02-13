@@ -19,7 +19,7 @@ RUN pip install  uv --root-user-action=ignore && uv --version && \
 RUN uv pip install --upgrade  pip setuptools wheel --break-system-packages
 RUN uv pip install aiohttp --break-system-packages
 RUN uv pip install --no-build-isolation opencv-python-headless --break-system-packages
-RUN uv pip install --no-build-isolation "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@sageattention-transformers-patch" --break-system-packages
+RUN uv pip install --no-build-isolation "comfyui@git+https://github.com/samhodge-aiml/ComfyUI.git@cde73655d220827b6c934ba145037e4f499670df" --break-system-packages
 RUN rm -rf /var/lib/apt/lists/*
 RUN uv pip install  git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite --break-system-packages
 
