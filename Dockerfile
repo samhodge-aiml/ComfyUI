@@ -23,7 +23,7 @@ RUN uv pip install --no-build-isolation "comfyui@git+https://github.com/samhodge
 RUN rm -rf /var/lib/apt/lists/*
 RUN uv pip install  git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite --break-system-packages
 RUN uv pip install comfyui-hunyuanvideowrapper@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanVideoWrapper@cd50b21d607485bb19aa302f1c9ed0c38160c56d --break-system-packages 
-RUN uv pip install comfyui-custom-scripts@git+https://github.com/samhodge-aiml/ComfyUI-Custom-Scripts@15e8f9f04b4cefeaa803d5dabb5fe56ec4f4089f --break-system-packages
+RUN uv pip install comfyui-custom-scripts@git+https://github.com/samhodge-aiml/ComfyUI-Custom-Scripts@4fbb519c4e9616481ba16b4cd4943dbfabc6d553 --break-system-packages
 RUN uv pip install comfyui-kjnodes@git+https://github.com/samhodge-aiml/ComfyUI-KJNodes@31a6e7ecf3d7c954d1eee0a829b37a8c13de7c92 --break-system-packages
 RUN uv pip install comfyui-comfyroll@git+https://github.com/samhodge-aiml/ComfyUI_Comfyroll_CustomNodes@555273416791b32fa2e059c0a8831262b9a2361f --break-system-packages
 # addresses https://github.com/pytorch/pytorch/issues/104801
