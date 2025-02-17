@@ -3,7 +3,9 @@ echo "starting downloads"
 echo $(date -u)
 echo "start download hyv model"
 echo $(date -u)
-mkdir -p workspace_data/models/diffusion && cd workspace_data/models/diffusion && git clone https://huggingface.co/Kijai/HunyuanVideo_comfy && cd ./../../..
+mkdir -p workspace_data/models/diffusion_models && cd workspace_data/models/diffusion_models && git clone https://huggingface.co/Kijai/HunyuanVideo_comfy && cd ./../../..
+mkdir -p workspace_data/models/vae
+mv workspace_data/models/diffusion/HunyuanVideo_comfy/*vae* workspace_data/models/vae
 echo "end download hyv model"
 echo $(date -u)
 
