@@ -26,7 +26,7 @@ RUN uv pip install comfyui-hunyuanvideowrapper@git+https://github.com/samhodge-a
 RUN uv pip install comfyui-custom-scripts@git+https://github.com/samhodge-aiml/ComfyUI-Custom-Scripts@4fbb519c4e9616481ba16b4cd4943dbfabc6d553 --break-system-packages
 RUN uv pip install comfyui-kjnodes@git+https://github.com/samhodge-aiml/ComfyUI-KJNodes@31a6e7ecf3d7c954d1eee0a829b37a8c13de7c92 --break-system-packages
 RUN uv pip install comfyui-comfyroll@git+https://github.com/samhodge-aiml/ComfyUI_Comfyroll_CustomNodes@555273416791b32fa2e059c0a8831262b9a2361f --break-system-packages
-RUN uv pip install comfyui-hunyaunloom@git+https://github.com/samhodge-aiml/ComfyUI-HuunyuanLoom@7b9726198e0447f2579e98ddaaedd84bfe6c7314 --break-system-packages
+RUN uv pip install comfyui-hunyaunloom@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanLoom/@7b9726198e0447f2579e98ddaaedd84bfe6c7314 --break-system-packages
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
 RUN comfyui --quick-test-for-ci --cpu --cwd /workspace 
