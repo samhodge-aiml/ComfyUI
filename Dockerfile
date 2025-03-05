@@ -32,7 +32,7 @@ RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-ipadapte
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-layerdiffuse.git  --break-system-packages
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-bria-bg-removal.git --break-system-packages
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-frame-interpolation --break-system-packages
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-animatediff-evolved --break-system-packages
+RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-animatediff-evolved/@08cf39ede401850276bd9d3ea4261dec422fa7b3 --break-system-packages
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-impact-pack/@0984a9212ccf4405bd155b507affd484552d3084 --break-system-packages
 RUN uv pip install git+https://github.com/AppMAna/appmana-comfyui-nodes-tensorrt --break-system-packages
 RUN uv pip install comfyui-advanced-controlnet@git+https://github.com/samhodge-aiml/ComfyUI-Advanced-ControlNet/@7931cfef22cb48f2c857cf8053b33cae634dd4d5 --break-system-packages
