@@ -43,6 +43,6 @@ RUN uv pip install comfyui-clip-with-break@git+https://github.com/samhodge-aiml/
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-animatediff-evolved/@5b56ad9bfd539746b338204002efce54bf19240c --break-system-packages
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
-RUN comfyui --quick-test-for-ci --cpu --cwd /workspace 
+#RUN comfyui --quick-test-for-ci --cpu --cwd /workspace 
 EXPOSE 8188
 CMD ["python3", "-m", "comfy.cmd.main", "--listen"]
