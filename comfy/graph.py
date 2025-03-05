@@ -1,16 +1,9 @@
 from typing import Optional
 
-<<<<<<< HEAD
-from .cmd.execution import nodes
-from .component_model.executor_types import DependencyCycleError, NodeInputError, NodeNotFoundError, \
-    DependencyExecutionErrorMessage
-from .graph_utils import is_link
-=======
 from .component_model.executor_types import DependencyCycleError, NodeInputError, NodeNotFoundError, \
     DependencyExecutionErrorMessage
 from .graph_utils import is_link
 from .nodes_context import get_nodes
->>>>>>> upstream/master
 
 
 class DynamicPrompt:
