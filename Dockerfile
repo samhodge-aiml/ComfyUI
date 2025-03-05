@@ -33,7 +33,7 @@ RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-layerdif
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-bria-bg-removal.git --break-system-packages
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-frame-interpolation --break-system-packages
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-impact-pack/@0984a9212ccf4405bd155b507affd484552d3084 --break-system-packages
-RUN uv pip install git+https://github.com/AppMAna/appmana-comfyui-nodes-tensorrt --break-system-packages
+#RUN uv pip install git+https://github.com/AppMAna/appmana-comfyui-nodes-tensorrt --break-system-packages
 RUN uv pip install comfyui-advanced-controlnet@git+https://github.com/samhodge-aiml/ComfyUI-Advanced-ControlNet/@7931cfef22cb48f2c857cf8053b33cae634dd4d5 --break-system-packages
 RUN uv pip install comfyui-jankhidiffusion@git+https://github.com/samhodge-aiml/comfyui_jankhidiffusion/@49fe48e83b6910a590ce4224cbd234ecc18c83a0 --break-system-packages
 RUN uv pip install comfyui-sampler-lcm-alternative@git+https://github.com/samhodge-aiml/ComfyUI-sampler-lcm-alternative/@ea0d7660ab70d3c691249d0abc9241cd1c2f2e9c --break-system-packages
