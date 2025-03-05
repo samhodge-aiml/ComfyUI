@@ -37,7 +37,7 @@ RUN uv pip install git+https://github.com/AppMAna/appmana-comfyui-nodes-tensorrt
 RUN uv pip install comfyui-advanced-controlnet@git+https://github.com/samhodge-aiml/ComfyUI-Advanced-ControlNet/@7931cfef22cb48f2c857cf8053b33cae634dd4d5 --break-system-packages
 RUN uv pip install comfyui-jankhidiffusion@git+https://github.com/samhodge-aiml/comfyui_jankhidiffusion/@49fe48e83b6910a590ce4224cbd234ecc18c83a0 --break-system-packages
 RUN uv pip install comfyui-sampler-lcm-alternative@git+https://github.com/samhodge-aiml/ComfyUI-sampler-lcm-alternative/@ea0d7660ab70d3c691249d0abc9241cd1c2f2e9c --break-system-packages
-RUN uv pip install comfyui-liveportraitkj@git+https://github.com/samhodge-aiml/ComfyUI-LivePortraitKJ/@21efbabaa884e810035d9be11a8b0f3b560486d8 --break-system-packages
+RUN uv pip install comfyui-liveportraitkj@git+https://github.com/samhodge-aiml/ComfyUI-LivePortraitKJ/@403fb03c5a14b36fd645fb9d2afa9c6b605a7617 --break-system-packages
 RUN uv pip install rgthree-comfy@git+https://github.com/samhodge-aiml/rgthree-comfy/@879eeb029d87bd8dc1a990ab8844743a7304655b --break-system-packages
 RUN uv pip install comfyui-clip-with-break@git+https://github.com/samhodge-aiml/comfyui-clip-with-break/@b25f9200b48867664c7766a99a4e9b4ad6a5b913 --break-system-packages
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-animatediff-evolved/@5b56ad9bfd539746b338204002efce54bf19240c --break-system-packages
