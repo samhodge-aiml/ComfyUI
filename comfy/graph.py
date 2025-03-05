@@ -82,11 +82,7 @@ class TopologicalSort:
 
     def get_input_info(self, unique_id, input_name):
         class_type = self.dynprompt.get_node(unique_id)["class_type"]
-<<<<<<< HEAD
-        class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
-=======
         class_def = get_nodes().NODE_CLASS_MAPPINGS[class_type]
->>>>>>> upstream/master
         return get_input_info(class_def, input_name)
 
     def make_input_strong_link(self, to_node_id, to_input):
@@ -201,11 +197,7 @@ class ExecutionList(TopologicalSort):
         # Some other heuristics could probably be used here to improve the UX further.
         def is_output(node_id):
             class_type = self.dynprompt.get_node(node_id)["class_type"]
-<<<<<<< HEAD
-            class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
-=======
             class_def = get_nodes().NODE_CLASS_MAPPINGS[class_type]
->>>>>>> upstream/master
             if hasattr(class_def, 'OUTPUT_NODE') and class_def.OUTPUT_NODE == True:
                 return True
             return False
