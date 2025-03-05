@@ -32,7 +32,6 @@ RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-ipadapte
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-layerdiffuse.git  --break-system-packages
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-bria-bg-removal.git --break-system-packages
 RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-frame-interpolation --break-system-packages
-RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-animatediff-evolved/@08cf39ede401850276bd9d3ea4261dec422fa7b3 --break-system-packages
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-impact-pack/@0984a9212ccf4405bd155b507affd484552d3084 --break-system-packages
 RUN uv pip install git+https://github.com/AppMAna/appmana-comfyui-nodes-tensorrt --break-system-packages
 RUN uv pip install comfyui-advanced-controlnet@git+https://github.com/samhodge-aiml/ComfyUI-Advanced-ControlNet/@7931cfef22cb48f2c857cf8053b33cae634dd4d5 --break-system-packages
@@ -41,6 +40,7 @@ RUN uv pip install comfyui-sampler-lcm-alternative@git+https://github.com/samhod
 RUN uv pip install comfyui-liveportraitkj@git+https://github.com/samhodge-aiml/ComfyUI-LivePortraitKJ/@21efbabaa884e810035d9be11a8b0f3b560486d8 --break-system-packages
 RUN uv pip install rgthree-comfy@git+https://github.com/samhodge-aiml/rgthree-comfy/@879eeb029d87bd8dc1a990ab8844743a7304655b --break-system-packages
 RUN uv pip install comfyui-clip-with-break@git+https://github.com/samhodge-aiml/comfyui-clip-with-break/@b25f9200b48867664c7766a99a4e9b4ad6a5b913 --break-system-packages
+RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-animatediff-evolved/@5b56ad9bfd539746b338204002efce54bf19240c --break-system-packages
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
 RUN comfyui --quick-test-for-ci --cpu --cwd /workspace 
