@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import Protocol, Optional, TypeVar, runtime_checkable, Callable, Any
+from typing import Protocol, Optional, TypeVar, runtime_checkable, Callable, Any, NamedTuple
 
 import torch
 import torch.nn
@@ -126,6 +126,16 @@ class ModelManageable(Protocol):
             self.unpatch_model(self.offload_device, unpatch_weights=unpatch_all)
         return self.model
 
+    def set_model_compute_dtype(self, dtype: torch.dtype):
+        pass
+
+    def add_weight_wrapper(self, name, function):
+        pass
+
+    @property
+    def force_cast_weights(self) -> bool:
+        return False
+
 
 @dataclasses.dataclass
 class MemoryMeasurements:
@@ -140,6 +150,8 @@ class MemoryMeasurements:
     def device(self) -> torch.device:
         if isinstance(self.model, DeviceSettable):
             return self.model.device
+        elif hasattr(self.model, "device"):
+            return self.model.device
         else:
             return self._device
 
@@ -147,6 +159,8 @@ class MemoryMeasurements:
     def device(self, value: torch.device):
         if isinstance(self.model, DeviceSettable):
             self.model.device = value
+        elif hasattr(self.model, "to"):
+            self.model.to(value)
         self._device = value
 
 
@@ -165,3 +179,9 @@ class ModelOptions(TypedDict, total=False):
     disable_cfg1_optimization: NotRequired[bool]
     denoise_mask_function: NotRequired[Callable]
     patches: NotRequired[dict[str, list]]
+
+class LoadingListItem(NamedTuple):
+    module_size: int
+    name: str
+    module: torch.nn.Module
+    params: list[str]

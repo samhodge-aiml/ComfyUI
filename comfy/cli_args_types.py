@@ -40,6 +40,7 @@ class Configuration(dict):
         config_files (Optional[List[str]]): Path to the configuration file(s) that were set in the arguments.
         cwd (Optional[str]): Working directory. Defaults to the current directory. This is always treated as a base path for model files, and it will be the place where model files are downloaded.
         base_paths (Optional[list[str]]): Additional base paths for custom nodes, models and inputs.
+        base_directory (Optional[str]): Set the ComfyUI base directory for models, custom_nodes, input, output, temp, and user directories.
         listen (str): IP address to listen on. Defaults to "127.0.0.1".
         port (int): Port number for the server to listen on. Defaults to 8188.
         enable_cors_header (Optional[str]): Enables CORS with the specified origin.
@@ -122,6 +123,8 @@ class Configuration(dict):
         anthropic_api_key (str): Configures the Anthropic API key for its nodes related to Claude functionality. Visit https://console.anthropic.com/settings/keys to create this key.
         user_directory (Optional[str]): Set the ComfyUI user directory with an absolute path.
         log_stdout (bool): Send normal process output to stdout instead of stderr (default)
+        panic_when (list[str]): List of fully qualified exception class names to panic (sys.exit(1)) when a workflow raises it.
+        enable_compress_response_body (bool): Enable compressing response body.
     """
 
     def __init__(self, **kwargs):
@@ -130,9 +133,11 @@ class Configuration(dict):
         self.config_files = []
         self.cwd: Optional[str] = None
         self.base_paths: list[str] = []
+        self.base_directory: Optional[str] = None
         self.listen: str = "127.0.0.1"
         self.port: int = 8188
         self.enable_cors_header: Optional[str] = None
+        self.enable_compress_response_body: bool = False
         self.max_upload_size: float = 100.0
         self.extra_model_paths_config: Optional[List[str]] = []
         self.output_directory: Optional[str] = None
@@ -220,6 +225,7 @@ class Configuration(dict):
         self.ideogram_api_key: Optional[str] = None
         self.anthropic_api_key: Optional[str] = None
         self.user_directory: Optional[str] = None
+        self.panic_when: list[str] = []
 
     def __getattr__(self, item):
         if item not in self:

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import operator
 import os.path
+from abc import ABC, abstractmethod
 from functools import reduce
 from typing import Optional, List
 
@@ -20,16 +21,22 @@ from comfy.language.language_types import GENERATION_KWARGS_TYPE, GENERATION_KWA
 from comfy.language.transformers_model_management import TransformersManagedModel
 from comfy.model_downloader import get_huggingface_repo_list, get_or_download_huggingface_repo
 from comfy.model_management import get_torch_device_name, unet_dtype, unet_offload_device
+from comfy.node_helpers import export_custom_nodes
 from comfy.nodes.package_typing import CustomNode, InputTypes, ValidatedNodeResult, Seed
 
 _AUTO_CHAT_TEMPLATE = "default"
 
 
-class TransformerSamplerBase(CustomNode):
+class TransformerSamplerBase(CustomNode, ABC):
     RETURN_TYPES = GENERATION_KWARGS_TYPE_NAME,
     RETURN_NAMES = "GENERATION ARGS",
     FUNCTION = "execute"
     CATEGORY = "language/samplers"
+
+    @classmethod
+    @abstractmethod
+    def INPUT_TYPES(cls) -> InputTypes:
+        return ...
 
     @property
     def do_sample(self):
@@ -67,7 +74,7 @@ class TransformerTemperatureSampler(TransformerSamplerBase):
     def INPUT_TYPES(cls) -> InputTypes:
         return {
             "required": {
-                "temperature": ("FLOAT", {"default": 1.0, "min": 0})
+                "temperature": ("FLOAT", {"default": 1.0, "min": 0, "step": 0.001})
             }
         }
 
@@ -184,8 +191,10 @@ class TransformersLoader(CustomNode):
         return {
             "required": {
                 "ckpt_name": (get_huggingface_repo_list(),),
-                "subfolder": ("STRING", {})
             },
+            "optional": {
+                "subfolder": ("STRING", {}),
+            }
         }
 
     CATEGORY = "language"
@@ -317,7 +326,7 @@ class OneShotInstructTokenize(CustomNode):
     RETURN_TYPES = (TOKENS_TYPE_NAME,)
     FUNCTION = "execute"
 
-    def execute(self, model: LanguageModel, prompt: str, images: List[torch.Tensor] | torch.Tensor = None, chat_template: str = "__auto__") -> ValidatedNodeResult:
+    def execute(self, model: LanguageModel, prompt: str, images: List[torch.Tensor] | torch.Tensor = None, chat_template: str = _AUTO_CHAT_TEMPLATE) -> ValidatedNodeResult:
         if chat_template == _AUTO_CHAT_TEMPLATE:
             # use an exact match
             model_name = os.path.basename(model.repo_id)
@@ -370,7 +379,7 @@ class PreviewString(CustomNode):
             }
         }
 
-    CATEGORY = "language"
+    CATEGORY = "strings"
     FUNCTION = "execute"
     RETURN_TYPES = ("STRING",)
     OUTPUT_NODE = True
@@ -392,7 +401,7 @@ class SaveString(CustomNode):
             }
         }
 
-    CATEGORY = "language"
+    CATEGORY = "strings"
     FUNCTION = "execute"
     OUTPUT_NODE = True
     RETURN_TYPES = ()
@@ -412,24 +421,4 @@ class SaveString(CustomNode):
         return {"ui": {"string": value}}
 
 
-NODE_CLASS_MAPPINGS = {}
-for cls in (
-        TransformerTopKSampler,
-        TransformerTopPSampler,
-        TransformerTemperatureSampler,
-        TransformerGreedySampler,
-        TransformerContrastiveSearchSampler,
-        TransformerBeamSearchSampler,
-        TransformerMergeSamplers,
-        TransformersLoader,
-        TransformersImageProcessorLoader,
-        TransformersGenerate,
-        OneShotInstructTokenize,
-        TransformersM2M100LanguageCodes,
-        TransformersTokenize,
-        TransformersFlores200LanguageCodes,
-        TransformersTranslationTokenize,
-        PreviewString,
-        SaveString,
-):
-    NODE_CLASS_MAPPINGS[cls.__name__] = cls
+export_custom_nodes()

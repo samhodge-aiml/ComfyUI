@@ -6,6 +6,7 @@ import inspect
 import logging
 import operator
 import pathlib
+import weakref
 from functools import reduce
 from typing import Optional, Any, Callable
 
@@ -43,9 +44,10 @@ class TransformersManagedModel(ModelManageable, LanguageModel):
             processor: Optional[ProcessorMixin | AutoProcessor] = None
     ):
         self._repo_id = repo_id
-        self.model = model
+        self._model = model
         self._tokenizer = tokenizer
         self._processor = processor
+        self._object_patches: dict[str, Any] = {}
         self._parameter_count = sum(param.nelement() for param in self.model.state_dict().values())
         self._size = sum(param.nelement() * param.element_size() for param in self.model.state_dict().values())
         self.load_device = get_torch_device()
@@ -53,13 +55,14 @@ class TransformersManagedModel(ModelManageable, LanguageModel):
         self._config_dict = config_dict
         self._on_set_processor(self._processor)
         self._model_type = ""
+        self._original_transformers_managed_model: weakref.ReferenceType["TransformersManagedModel"] = weakref.ref(self)
         if model.device != self.offload_device:
             model.to(device=self.offload_device)
 
     @staticmethod
-    def from_pretrained(ckpt_name: str, subfolder: Optional[str] = None) -> "TransformersManagedModel":
+    def from_pretrained(ckpt_name: str, subfolder: Optional[str] = None, config_dict: PretrainedConfig | dict | None = None) -> "TransformersManagedModel":
         hub_kwargs = {}
-        if subfolder is not None and subfolder != "":
+        if subfolder is not None and subfolder.strip() != "":
             hub_kwargs["subfolder"] = subfolder
         repo_id = ckpt_name
         with comfy_tqdm():
@@ -77,7 +80,10 @@ class TransformersManagedModel(ModelManageable, LanguageModel):
             except ImportError:
                 pass
 
-            config_dict, _ = PretrainedConfig.get_config_dict(ckpt_name, **hub_kwargs)
+            if config_dict is None:
+                config_dict, _ = PretrainedConfig.get_config_dict(ckpt_name, **hub_kwargs)
+            elif isinstance(config_dict, PretrainedConfig):
+                config_dict: dict = config_dict.to_dict()
             model_type = config_dict["model_type"]
             # language models prefer to use bfloat16 over float16
             kwargs_to_try = ({"torch_dtype": unet_dtype(supported_dtypes=(torch.bfloat16, torch.float16, torch.float32)),
@@ -396,14 +402,21 @@ class TransformersManagedModel(ModelManageable, LanguageModel):
             if hasattr(self.processor, "to"):
                 self.processor.to(device=self.offload_device)
             assert "input_ids" in batch_feature
-            batch_feature.to(device=self.load_device, dtype=self.model_dtype())
+            try:
+                batch_feature.to(device=self.load_device, dtype=self.model_dtype())
+            except TypeError:
+                # works around Pixtral processor bug
+                batch_feature.to(self.load_device)
+                batch_feature.to(self.model_dtype())
             # noinspection PyTypeChecker
-            return {
-                "image_sizes": image_sizes,
-                "images": batch_feature["pixel_values"],
+            batch_feature_dict = {
                 "inputs": batch_feature["input_ids"],
                 **batch_feature
             }
+            if "pixel_values" in batch_feature:
+                batch_feature_dict["image_sizes"] = image_sizes
+                batch_feature_dict["images"] = batch_feature["pixel_values"]
+            return batch_feature_dict
 
     @property
     def repo_id(self) -> str:
@@ -415,6 +428,28 @@ class TransformersManagedModel(ModelManageable, LanguageModel):
             return f"<TransformersManagedModel for {'/'.join(repo_id_as_path.parts[-2:])} ({self.model.__class__.__name__})>"
         else:
             return f"<TransformersManagedModel for {self.model.__class__.__name__}>"
+
+    def clone(self) -> TransformersManagedModel:
+        m = copy.copy(self)
+        # deep copy a few objects
+        m._object_patches = copy.copy(self._object_patches)
+        return m
+
+    def add_object_patch(self, name: str, obj: Any):
+        # for the sake of compatibility, rewrite the name to the actual model field
+        if name == "diffusion_model":
+            name = "model"
+
+        self._object_patches[name] = obj
+
+    def get_model_object(self, name: str) -> torch.nn.Module:
+        if name == "diffusion_model":
+            name = "model"
+        return super().get_model_object(name)
+
+    @property
+    def model(self) -> PreTrainedModel | torch.nn.Module:
+        return self._object_patches.get("model", self._model)
 
 
 class _ProgressTextStreamer(TextStreamer):

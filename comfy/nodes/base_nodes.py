@@ -27,7 +27,7 @@ from ..cli_args import args
 from ..cmd import folder_paths, latent_preview
 from ..comfy_types import IO, ComfyNodeABC, InputTypeDict
 from ..component_model.deprecation import _deprecate_method
-from ..component_model.tensor_types import RGBImage, RGBImageBatch, MaskBatch
+from ..component_model.tensor_types import RGBImage, RGBImageBatch, MaskBatch, RGBAImageBatch
 from ..execution_context import current_execution_context
 from ..images import open_image
 from ..interruption import interrupt_current_processing
@@ -946,7 +946,7 @@ class CLIPLoader:
     @classmethod
     def INPUT_TYPES(s):
         return {"required": { "clip_name": (get_filename_list_with_downloadable("text_encoders", KNOWN_CLIP_MODELS),),
-                              "type": (["stable_diffusion", "stable_cascade", "sd3", "stable_audio", "mochi", "ltxv", "pixart", "cosmos"], ),
+                              "type": (["stable_diffusion", "stable_cascade", "sd3", "stable_audio", "mochi", "ltxv", "pixart", "cosmos", "lumina2"], ),
                               },
                 "optional": {
                               "device": (["default", "cpu"], {"advanced": True}),
@@ -956,7 +956,7 @@ class CLIPLoader:
 
     CATEGORY = "advanced/loaders"
 
-    DESCRIPTION = "[Recipes]\n\nstable_diffusion: clip-l\nstable_cascade: clip-g\nsd3: t5 / clip-g / clip-l\nstable_audio: t5\nmochi: t5\ncosmos: old t5 xxl"
+    DESCRIPTION = "[Recipes]\n\nstable_diffusion: clip-l\nstable_cascade: clip-g\nsd3: t5 / clip-g / clip-l\nstable_audio: t5\nmochi: t5\ncosmos: old t5 xxl\nlumina2: gemma 2 2B"
 
     def load_clip(self, clip_name, type="stable_diffusion", device="default"):
         clip_type = sd.CLIPType.STABLE_DIFFUSION
@@ -974,6 +974,8 @@ class CLIPLoader:
             clip_type = sd.CLIPType.PIXART
         elif type == "cosmos":
             clip_type = sd.CLIPType.COSMOS
+        elif type == "lumina2":
+            clip_type = sd.CLIPType.LUMINA2
         else:
             logging.warning(f"Unknown clip type argument passed: {type} for model {clip_name}")
 
@@ -1101,10 +1103,11 @@ class StyleModelApply:
         for t in conditioning:
             (txt, keys) = t
             keys = keys.copy()
-            if strength_type == "attn_bias" and strength != 1.0:
+            # even if the strength is 1.0 (i.e, no change), if there's already a mask, we have to add to it
+            if "attention_mask" in keys or (strength_type == "attn_bias" and strength != 1.0):
                 # math.log raises an error if the argument is zero
                 # torch.log returns -inf, which is what we want
-                attn_bias = torch.log(torch.Tensor([strength]))
+                attn_bias = torch.log(torch.Tensor([strength if strength_type == "attn_bias" else 1.0]))
                 # get the size of the mask image
                 mask_ref_size = keys.get("attention_mask_img_shape", (1, 1))
                 n_ref = mask_ref_size[0] * mask_ref_size[1]
@@ -1793,6 +1796,36 @@ class LoadImageMask:
 
         return True
 
+
+class LoadImageOutput(LoadImage):
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "image": ("COMBO", {
+                    "image_upload": True,
+                    "image_folder": "output",
+                    "remote": {
+                        "route": "/internal/files/output",
+                        "refresh_button": True,
+                        "control_after_refresh": "first",
+                    },
+                }),
+            }
+        }
+
+    DESCRIPTION = "Load an image from the output folder. When the refresh button is clicked, the node will update the image list and automatically select the first image, allowing for easy iteration."
+    EXPERIMENTAL = True
+    FUNCTION = "load_image_output"
+
+    def load_image_output(self, image):
+        return self.load_image(f"{image} [output]")
+
+    @classmethod
+    def VALIDATE_INPUTS(s, image):
+        return True
+
+
 class ImageScale:
     upscale_methods = ["nearest-exact", "bilinear", "area", "bicubic", "lanczos"]
     crop_methods = ["disabled", "center"]
@@ -1917,35 +1950,35 @@ class ImagePadForOutpaint:
 
     CATEGORY = "image"
 
-    def expand_image(self, image, left, top, right, bottom, feathering):
-        d1, d2, d3, d4 = image.size()
+    def expand_image(self, image: RGBImageBatch | RGBAImageBatch, left, top, right, bottom, feathering) -> tuple[RGBImageBatch | RGBAImageBatch, MaskBatch]:
+        batch, height, width, channels = image.size()
 
         new_image = torch.ones(
-            (d1, d2 + top + bottom, d3 + left + right, d4),
+            (batch, height + top + bottom, width + left + right, channels),
             dtype=torch.float32,
         ) * 0.5
 
-        new_image[:, top:top + d2, left:left + d3, :] = image
+        new_image[:, top:top + height, left:left + width, :] = image
 
         mask = torch.ones(
-            (d2 + top + bottom, d3 + left + right),
+            (batch, height + top + bottom, width + left + right),
             dtype=torch.float32,
         )
 
         t = torch.zeros(
-            (d2, d3),
+            (height, width),
             dtype=torch.float32
         )
 
-        if feathering > 0 and feathering * 2 < d2 and feathering * 2 < d3:
+        if feathering > 0 and feathering * 2 < height and feathering * 2 < width:
 
-            for i in range(d2):
-                for j in range(d3):
-                    dt = i if top != 0 else d2
-                    db = d2 - i if bottom != 0 else d2
+            for i in range(height):
+                for j in range(width):
+                    dt = i if top != 0 else height
+                    db = height - i if bottom != 0 else height
 
-                    dl = j if left != 0 else d3
-                    dr = d3 - j if right != 0 else d3
+                    dl = j if left != 0 else width
+                    dr = width - j if right != 0 else width
 
                     d = min(dt, db, dl, dr)
 
@@ -1956,9 +1989,9 @@ class ImagePadForOutpaint:
 
                     t[i, j] = v * v
 
-        mask[top:top + d2, left:left + d3] = t
+        mask[:, top:top + height, left:left + width] = t
 
-        return (new_image, mask)
+        return new_image, mask
 
 
 NODE_CLASS_MAPPINGS = {
@@ -1979,6 +2012,7 @@ NODE_CLASS_MAPPINGS = {
     "PreviewImage": PreviewImage,
     "LoadImage": LoadImage,
     "LoadImageMask": LoadImageMask,
+    "LoadImageOutput": LoadImageOutput,
     "ImageScale": ImageScale,
     "ImageScaleBy": ImageScaleBy,
     "ImageInvert": ImageInvert,
@@ -2081,6 +2115,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "PreviewImage": "Preview Image",
     "LoadImage": "Load Image",
     "LoadImageMask": "Load Image (as Mask)",
+    "LoadImageOutput": "Load Image (from Outputs)",
     "ImageScale": "Upscale Image",
     "ImageScaleBy": "Upscale Image By",
     "ImageUpscaleWithModel": "Upscale Image (using Model)",
