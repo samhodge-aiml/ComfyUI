@@ -23,21 +23,21 @@ RUN pip install uv --root-user-action=ignore && uv --version && \
     rm -rf /usr/local/lib/python3.*/dist-packages/cv2/ && \
     uv pip install wheel --break-system-packages && \
     uv pip install --no-build-isolation --break-system-packages opencv-python-headless && \
-    uv pip install --no-build-isolation --overrides=numpy-override.txt --break-system-packages "comfyui@git+https://github.com/hiddenswitch/ComfyUI.git" && \
+    uv pip install --no-build-isolation --overrides=numpy-override.txt --break-system-packages "comfyui@git+https://github.com/hiddenswitch/ComfyUI/@0fbce0a28299384e4f94ab4ff301f7a566dc3461" && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
-RUN uv pip install  git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite/@aa4a7f557ceb633d0efab2b3d8dab21aba383c6b --break-system-packages
 RUN uv pip install comfyui-hunyuanvideowrapper@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanVideoWrapper@0a1e01ca20ff29166953c7dcee18a40503a752ec --break-system-packages 
 RUN uv pip install comfyui-custom-scripts@git+https://github.com/samhodge-aiml/ComfyUI-Custom-Scripts@4fbb519c4e9616481ba16b4cd4943dbfabc6d553 --break-system-packages
 RUN uv pip install comfyui-kjnodes@git+https://github.com/samhodge-aiml/ComfyUI-KJNodes@31a6e7ecf3d7c954d1eee0a829b37a8c13de7c92 --break-system-packages
 RUN uv pip install comfyui-comfyroll@git+https://github.com/samhodge-aiml/ComfyUI_Comfyroll_CustomNodes@555273416791b32fa2e059c0a8831262b9a2361f --break-system-packages
 RUN uv pip install comfyui-hunyaunloom@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanLoom/@6b37a746408f1acedb4601e4312424991e89f167 --break-system-packages
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-ella.git  --break-system-packages
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-ipadapter-plus  --break-system-packages
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-layerdiffuse.git  --break-system-packages
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-bria-bg-removal.git --break-system-packages
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-frame-interpolation --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-ella/@3bc1e4eaed81153998bec465b8b1487a9601206b  --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-ipadapter-plus/@f0e28c29a66b7ab54c8c6f7e1c272d50b7d1ba67  --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-layerdiffuse/@888351374ac955b523e0a360ad0ee924ac7eeb99  --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-bria-bg-removal/@e8360c2d8c3e2144f54928d021b0fc86231accf8 --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-frame-interpolation/@89abafefd564ed03d359b3461f96c02a6a488166 --break-system-packages
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-impact-pack/@0984a9212ccf4405bd155b507affd484552d3084 --break-system-packages
 # RUN uv pip install git+https://github.com/AppMAna/appmana-comfyui-nodes-tensorrt --break-system-packages
 RUN uv pip install comfyui-advanced-controlnet@git+https://github.com/samhodge-aiml/ComfyUI-Advanced-ControlNet/@7931cfef22cb48f2c857cf8053b33cae634dd4d5 --break-system-packages
