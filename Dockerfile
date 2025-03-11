@@ -27,7 +27,7 @@ RUN pip install uv --root-user-action=ignore && uv --version && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
-RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite/@aa4a7f557ceb633d0efab2b3d8dab21aba383c6b --break-system-packages
+RUN uv pip install git+https://github.com/AppMana/appmana-comfyui-nodes-video-helper-suite.git --break-system-packages
 RUN uv pip install comfyui-hunyuanvideowrapper@git+https://github.com/samhodge-aiml/ComfyUI-HunyuanVideoWrapper@0a1e01ca20ff29166953c7dcee18a40503a752ec --break-system-packages 
 RUN uv pip install comfyui-custom-scripts@git+https://github.com/samhodge-aiml/ComfyUI-Custom-Scripts@4fbb519c4e9616481ba16b4cd4943dbfabc6d553 --break-system-packages
 RUN uv pip install comfyui-kjnodes@git+https://github.com/samhodge-aiml/ComfyUI-KJNodes@31a6e7ecf3d7c954d1eee0a829b37a8c13de7c92 --break-system-packages
