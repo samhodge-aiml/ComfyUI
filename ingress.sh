@@ -7,6 +7,8 @@ WORKSPACE_DIR="${SCRIPT_DIR}/workspace_data"
 MODELS_DIR="${WORKSPACE_DIR}/models"
 
 # HotShot Animate Diff Model Temporal
+# https://github.com/hotshotco/Hotshot-XL
+
 echo "Starting Animate Diff Hotshot Temporal"
 mkdir -p ${MODELS_DIR}/animatediff_models
 wget -O - --header="Authorization: Bearer ${HF_TOKEN}" \
@@ -15,6 +17,8 @@ https://huggingface.co/hotshotco/Hotshot-XL/resolve/main/hsxl_temporal_layers.f1
 echo "Ending Animate Diff Hotshot Temporal"
 
 # SDXL VAE
+# https://github.com/Stability-AI/generative-models
+# https://arxiv.org/pdf/2407.03168
 echo "Starting SDXL VAE"
 mkdir -p ${MODELS_DIR}/vae
 wget -O - --header="Authorization: Bearer ${HF_TOKEN}" \
@@ -23,6 +27,7 @@ https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors \
 echo "Ending SDXL VAE"
 
 # Liveportait
+# https://liveportrait.github.io/
 echo "Starting Live Portrait"
 mkdir -p ${MODELS_DIR}/liveportrait
 cd ${MODELS_DIR}/liveportrait
@@ -33,6 +38,7 @@ cd ${SCRIPT_DIR}
 echo "Ending Live Portrait"
 
 # Xinsir ControlNet Union XL diffusion_pytorch_model_promax.safetensors
+# https://github.com/xinsir6/ControlNetPlus/tree/main
 echo "Starting ControlNet Union XL"
 mkdir -p ${MODELS_DIR}/controlnet
 cd ${MODELS_DIR}/controlnet
@@ -41,7 +47,8 @@ cd ${SCRIPT_DIR}
 echo "Ending ControlNet Union XL"
 
 # IPAdapter
-
+# https://github.com/tencent-ailab/IP-Adapter
+# https://ip-adapter.github.io/
 # clip_vision directory
 echo "Starting IP Adapter"
 mkdir -p ${MODELS_DIR}/clip_vision
@@ -100,7 +107,9 @@ echo "Ending IP Adapter"
 
 
 # SDXL LoRa LCM
-
+# https://huggingface.co/docs/diffusers/main/en/using-diffusers/inference_with_lcm_lora
+# https://arxiv.org/abs/2311.05556
+# 
 echo "Starting SDXL LoRa LCM"
 
 mkdir -p ${MODELS_DIR}/loras/SDXL
@@ -113,6 +122,8 @@ echo "Ending SDXL LoRa LCM"
 
 # SDXL Model see also https://civitai.com/models/198051?modelVersionId=1099629
 # License https://github.com/Stability-AI/generative-models/blob/main/model_licenses/LICENSE-SDXL1.0
+# https://huggingface.co/docs/diffusers/en/training/sdxl
+# 
 
 echo "Starting Lineart Model"
 
@@ -127,6 +138,9 @@ echo "Ending Lineart Model"
 # Animate Diff Evolved Motion Models
 
 echo "Starting Animate Diff Motion Models"
+# https://github.com/huggingface/diffusers/pull/6721
+# https://github.com/guoyww/AnimateDiff/tree/sdxl
+# https://arxiv.org/abs/2307.04725
 
 mkdir -p ${MODELS_DIR}/animatediff_models
 
