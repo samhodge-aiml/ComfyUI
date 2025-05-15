@@ -49,9 +49,8 @@ RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-an
 RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-video-helper-suite@f1747d423fa15b499e8d81827cbb75435750bf0b --break-system-packages
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
-RUN comfyui --quick-test-for-ci --cpu --cwd /workspace
-RUN chown $(id -g):$(id -u) -R /usr/local/lib/python3.12/dist-packages
-RUN chmod a+rw -R /usr/local/lib/python3.12/dist-packages
 RUN uv pip install sageattention --break-system-packages
+RUN comfyui --quick-test-for-ci --cpu --cwd /workspace
+
 EXPOSE 8188
 CMD ["python", "-m", "comfy.cmd.main", "--listen"]
