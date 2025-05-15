@@ -50,6 +50,9 @@ RUN uv pip install git+https://github.com/samhodge-aiml/appmana-comfyui-nodes-vi
 # addresses https://github.com/pytorch/pytorch/issues/104801
 # and issues reported by importing nodes_canny
 RUN comfyui --quick-test-for-ci --cpu --cwd /workspace
-
+RUN mkdir -p /usr/local/lib/python3.12/dist-packages/ComfyUI_KJNodes_nodes/intrinsic_loras
+RUN chown $(id -g):$(id -u) -R /usr/local/lib/python3.12/dist-packages/ComfyUI_KJNodes_nodes/intrinsic_loras
+RUN chmod a+rw -R /usr/local/lib/python3.12/dist-packages/ComfyUI_KJNodes_nodes/intrinsic_loras
+RUN uv pip install sageattention --break-system-packages
 EXPOSE 8188
 CMD ["python", "-m", "comfy.cmd.main", "--listen"]
