@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - workspace_data:/workspace
+      - ${PWD}/workspace_data:/volume
     deploy:
       replicas: 1
       resources:
@@ -21,6 +21,14 @@ services:
       - COMFYUI_LOGGING_LEVEL=ERROR
     command:
       - comfyui-worker
+      - --output-directory
+      - /volume
+      - --input-directory
+      - /volume
+      - --temp-directory
+      - /volume
+      - --base-paths
+      - /volume
     healthcheck:
       test: curl -f http://localhost:9090/health
       interval: 10s
@@ -35,7 +43,7 @@ services:
     deploy:
       replicas: 1
     volumes:
-      - workspace_data:/workspace
+      - ${PWD}/workspace_data:/volume
     environment:
       - COMFYUI_DISTRIBUTED_QUEUE_CONNECTION_URI=amqp://guest:guest@rabbitmq:5672
       - COMFYUI_DISTRIBUTED_QUEUE_FRONTEND=1
@@ -44,6 +52,14 @@ services:
       - "8188:8188"
     command:
       - comfyui
+      - --output-directory
+      - /volume
+      - --input-directory
+      - /volume
+      - --temp-directory
+      - /volume 
+      - --base-paths
+      - /volume
       - --listen
     healthcheck:
       test: curl -f http://localhost:8188/object_info
